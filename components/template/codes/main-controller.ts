@@ -14,15 +14,18 @@ const router = camelToKebabCase(module);
 return (
 `package controller
 
-import "${project}/app/module/${camelToSnakeCase(module)}/service"
+import (
+    "github.com/rs/zerolog"
+    "${project}/app/module/${camelToSnakeCase(module)}/service"
+)
 
 type Controller struct {
 	${module} ${module}Controller
 }
 
-func NewController(${module}Service service.${module}Service) *Controller {
+func NewController(${module}Service service.${module}Service, log zerolog.Logger) *Controller {
 	return &Controller{
-		${module}: New${module}Controller(${module}Service),
+		${module}: New${module}Controller(${module}Service, log),
 	}
 }`
 )}

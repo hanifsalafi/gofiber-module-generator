@@ -18,6 +18,7 @@ import { mapperCode } from "@/components/template/codes/mapper";
 import JSZip from "jszip";
 import { mainControllerCode } from "@/components/template/codes/main-controller";
 import { mainModuleCode } from "@/components/template/codes/main-module";
+import { entityCode } from "@/components/template/codes/entity";
 
 export default function Home() {
 
@@ -30,16 +31,18 @@ export default function Home() {
   const [request, setRequest] = useState("");
   const [response, setResponse] = useState("");
   const [mapper, setMapper] = useState("");
+  const [entity, setEntity] = useState("");
   const [mainController, setMainController] = useState("");
   const [mainModule, setMainModule] = useState("");
 
   const generateCode = () => {
-    setController(controllerCode({ project: project, module: module }));
+    setController(controllerCode({ project: project, module: module, columns: parseSQLStringToJson(sql) }));
     setService(serviceCode({ project: project, module: module }));
-    setRepository(repositoryCode({ project: project, module: module }));
+    setRepository(repositoryCode({ project: project, module: module, columns: parseSQLStringToJson(sql) }));
     setRequest(requestCode({ project: project, module: module, columns: parseSQLStringToJson(sql) }));
     setResponse(responseCode({ project: project, module: module, columns: parseSQLStringToJson(sql) }));
     setMapper(mapperCode({ project: project, module: module, columns: parseSQLStringToJson(sql) }));
+    setEntity(entityCode({ project: project, module: module, columns: parseSQLStringToJson(sql) }));
     setMainController(mainControllerCode({ project: project, module: module }));
     setMainModule(mainModuleCode({ project: project, module: module }));
   }
@@ -54,7 +57,8 @@ export default function Home() {
       { name: 'repository', fileName: `${camelToSnakeCase(module)}.repository.go`, fileContent: repository },
       { name: 'mapper', fileName: `${camelToSnakeCase(module)}.mapper.go`, fileContent: mapper },
       { name: 'request', fileName: `${camelToSnakeCase(module)}.request.go`, fileContent: request },
-      { name: 'response', fileName: `${camelToSnakeCase(module)}.response.go`, fileContent: response }
+      { name: 'response', fileName: `${camelToSnakeCase(module)}.response.go`, fileContent: response },
+      { name: 'entity', fileName: `${camelToSnakeCase(module)}.entity.go`, fileContent: entity }
     ];
     for (const folder of folders) {
       zip?.folder(folder.name)?.file(folder.fileName, folder.fileContent);

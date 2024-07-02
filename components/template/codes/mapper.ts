@@ -15,7 +15,11 @@ const router = camelToKebabCase(module);
 
 let defaultMapper: string[] = [];
 columns?.forEach((row) => {
-	defaultMapper.push(`${uppercase(row.label)}:    ${lowerModule}Req.${uppercase(row.label)},`);
+	if (row.label == "id"){
+		defaultMapper.push(`ID:    ${lowerModule}Req.ID,`);
+	} else {
+		defaultMapper.push(`${uppercase(row.label)}:    ${lowerModule}Req.${uppercase(row.label)},`);
+	}
 });
 
 return (

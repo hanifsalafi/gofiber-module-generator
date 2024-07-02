@@ -12,7 +12,7 @@ const moduleFileName = camelToSnakeCase(module);
 const router = camelToKebabCase(module);
 
 return (
-`package user
+`package ${moduleFileName}
 
 import (
 	"github.com/gofiber/fiber/v2"

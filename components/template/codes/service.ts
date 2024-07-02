@@ -17,35 +17,41 @@ return (
 
 import (
 	"github.com/rs/zerolog"
+	"${project}/app/database/entity"
 	"${project}/app/module/${moduleFileName}/mapper"
 	"${project}/app/module/${moduleFileName}/repository"
 	"${project}/app/module/${moduleFileName}/request"
 	"${project}/app/module/${moduleFileName}/response"
 	"${project}/utils/paginator"
+	usersRepository "${project}/app/module/users/repository"
 	"time"
+
+	utilSvc "go-humas-be/utils/service"
 )
 
 // ${module}Service
 type ${lowerModule}Service struct {
-	Repo repository.${module}Repository
-	Log  zerolog.Logger
+	Repo        repository.${module}Repository
+	UsersRepo   usersRepository.UsersRepository
+	Log         zerolog.Logger
 }
 
 // ${module}Service define interface of I${module}Service
 type ${module}Service interface {
 	All(req request.${module}QueryRequest) (${lowerModule} []*response.${module}Response, paging paginator.Pagination, err error)
 	Show(id uint) (${lowerModule} *response.${module}Response, err error)
-	Save(req request.${module}CreateRequest) (err error)
+	Save(req request.${module}CreateRequest, authToken string) (${lowerModule} *entity.${module}, err error)
 	Update(id uint, req request.${module}UpdateRequest) (err error)
 	Delete(id uint) error
 }
 
 // New${module}Service init ${module}Service
-func New${module}Service(repo repository.${module}Repository, log zerolog.Logger) ${module}Service {
+func New${module}Service(repo repository.${module}Repository, log zerolog.Logger, usersRepo usersRepository.UsersRepository) ${module}Service {
 
 	return &${lowerModule}Service{
-		Repo: repo,
-		Log:  log,
+		Repo:      repo,
+		Log:       log,
+		UsersRepo: usersRepo,
 	}
 }
 
@@ -72,10 +78,15 @@ func (_i *${lowerModule}Service) Show(id uint) (${lowerModule} *response.${modul
 	return mapper.${module}ResponseMapper(result), nil
 }
 
-func (_i *${lowerModule}Service) Save(req request.${module}CreateRequest) (err error) {
+func (_i *${lowerModule}Service) Save(req request.${module}CreateRequest, authToken string) (${lowerModule} *entity.${module}, err error) {
 	_i.Log.Info().Interface("data", req).Msg("")
 
-	return _i.Repo.Create(req.ToEntity())
+	newReq := req.ToEntity()
+
+	createdBy := utilSvc.GetUserInfo(_i.Log, _i.UsersRepo, authToken)
+	newReq.CreatedById = &createdBy.ID
+
+	return _i.Repo.Create(newReq)
 }
 
 func (_i *${lowerModule}Service) Update(id uint, req request.${module}UpdateRequest) (err error) {
@@ -84,6 +95,13 @@ func (_i *${lowerModule}Service) Update(id uint, req request.${module}UpdateRequ
 }
 
 func (_i *${lowerModule}Service) Delete(id uint) error {
-	return _i.Repo.Delete(id)
+	result, err := _i.Repo.FindOne(id)
+	if err != nil {
+		return err
+	}
+
+	isActive := false
+	result.IsActive = &isActive
+	return _i.Repo.Update(id, result)
 }`
 )}
