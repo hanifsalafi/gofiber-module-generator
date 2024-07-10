@@ -31,9 +31,9 @@ const router = camelToKebabCase(module);
 let defaultResponse: string[] = [];
 columns?.forEach((row) => {
 	if (row.label == "id"){
-		defaultResponse.push(`${row.label == "id" ? "ID" : uppercase(row.label)}  ${convertType(row.type)}    \`json:"${camelToSnakeCase(row.label)}"\``)
+		defaultResponse.push(`${row.label == "id" ? "ID" : uppercase(row.label)}  ${convertType(row.type)}    \`json:"${lowercaseFirstLetter(uppercase(row.label))}"\``)
 	} else {
-		defaultResponse.push(`${uppercase(row.label)}  ${convertType(row.type)}    \`json:"${camelToSnakeCase(row.label)}"\``)
+		defaultResponse.push(`${uppercase(row.label)}  ${convertType(row.type)}    \`json:"${lowercaseFirstLetter(uppercase(row.label))}"\``)
 	}
 });
 

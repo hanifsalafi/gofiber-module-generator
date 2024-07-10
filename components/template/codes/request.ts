@@ -52,10 +52,10 @@ columns?.forEach((row) => {
 	if (row.label == "id"){
 		updateRequest.push(`${row.label == "id" ? "ID" : uppercase(row.label)}  ${convertType(row.type)}    \`json:"${camelToSnakeCase(row.label)}" validate:"required"\``)
 	} else if (row.label != "created_at" && row.label != "updated_at" && row.label != "is_active") {
-		queryRequest.push(`${uppercase(row.label)}  *${convertType(row.type)}    \`json:"${camelToSnakeCase(row.label)}"\``)
-		queryRequestContext.push(`${uppercase(row.label)}  string    \`json:"${camelToSnakeCase(row.label)}"\``)
-		createRequest.push(`${uppercase(row.label)}  ${convertType(row.type)}    \`json:"${camelToSnakeCase(row.label)}" validate:"${convertValidate(row.label)}"\``)
-		updateRequest.push(`${uppercase(row.label)}  ${convertType(row.type)}    \`json:"${camelToSnakeCase(row.label)}" validate:"${convertValidate(row.label)}"\``)
+		queryRequest.push(`${uppercase(row.label)}  *${convertType(row.type)}    \`json:"${lowercaseFirstLetter(uppercase(row.label))}"\``)
+		queryRequestContext.push(`${uppercase(row.label)}  string    \`json:"${lowercaseFirstLetter(uppercase(row.label))}"\``)
+		createRequest.push(`${uppercase(row.label)}  ${convertType(row.type)}    \`json:"${lowercaseFirstLetter(uppercase(row.label))}" validate:"${convertValidate(row.label)}"\``)
+		updateRequest.push(`${uppercase(row.label)}  ${convertType(row.type)}    \`json:"${lowercaseFirstLetter(uppercase(row.label))}" validate:"${convertValidate(row.label)}"\``)
 
 		if (row.type == "varchar"){
 			queryRequestContextToParamReq.push(

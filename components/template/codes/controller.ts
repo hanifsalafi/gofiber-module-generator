@@ -15,7 +15,7 @@ const router = camelToKebabCase(module);
 let reqContext: string[] = [];
 columns?.forEach((row) => {
 	if (row.label != "id" && row.label != "created_at" && row.label != "updated_at" && row.label != "is_active"){
-		reqContext.push(`${uppercase(row.label)}:              c.Query("${lowercaseFirstLetter(row.label)}"),`)
+		reqContext.push(`${uppercase(row.label)}:              c.Query("${lowercaseFirstLetter(uppercase(row.label))}"),`)
 	}
 });
 
@@ -103,7 +103,7 @@ func (_i *${lowerModule}Controller) All(c *fiber.Ctx) error {
 // @Failure      400  {object}  response.BadRequestError
 // @Failure      401  {object}  response.UnauthorizedError
 // @Failure      500  {object}  response.InternalServerError
-// @Router       /${router}/:id [get]
+// @Router       /${router}/{id} [get]
 func (_i *${lowerModule}Controller) Show(c *fiber.Ctx) error {
 	id, err := strconv.ParseUint(c.Params("id"), 10, 0)
 	if err != nil {
@@ -163,7 +163,7 @@ func (_i *${lowerModule}Controller) Save(c *fiber.Ctx) error {
 // @Failure      400  {object}  response.BadRequestError
 // @Failure      401  {object}  response.UnauthorizedError
 // @Failure      500  {object}  response.InternalServerError
-// @Router       /${router}/:id [put]
+// @Router       /${router}/{id} [put]
 func (_i *${lowerModule}Controller) Update(c *fiber.Ctx) error {
 	id, err := strconv.ParseUint(c.Params("id"), 10, 0)
 	if err != nil {
@@ -196,7 +196,7 @@ func (_i *${lowerModule}Controller) Update(c *fiber.Ctx) error {
 // @Failure      400  {object}  response.BadRequestError
 // @Failure      401  {object}  response.UnauthorizedError
 // @Failure      500  {object}  response.InternalServerError
-// @Router       /${router}/:id [delete]
+// @Router       /${router}/{id} [delete]
 func (_i *${lowerModule}Controller) Delete(c *fiber.Ctx) error {
 	id, err := strconv.ParseUint(c.Params("id"), 10, 0)
 	if err != nil {
