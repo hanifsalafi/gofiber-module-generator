@@ -26,7 +26,7 @@ import (
 	usersRepository "${project}/app/module/users/repository"
 	"time"
 
-	utilSvc "go-humas-be/utils/service"
+	utilSvc "${project}/utils/service"
 )
 
 // ${module}Service
